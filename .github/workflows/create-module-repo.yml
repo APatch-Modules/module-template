@@ -16,7 +16,7 @@ jobs:
         run: |
           BODY="${{ github.event.issue.body }}"
 
-          MODULE_NAME=$(echo "$BODY" | sed -n 's/^Module name: *//p' | head -n1)
+          MODULE_NAME=$(echo "$BODY" | awk '/^### Module name/ {flag=1; next}flag && NF {print; exit}')
           echo "module_name=$MODULE_NAME" >> $GITHUB_OUTPUT
 
           REQUESTER="${{ github.event.issue.user.login }}"
