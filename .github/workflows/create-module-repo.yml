@@ -1,0 +1,69 @@
+name: Create Module Repository
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-repo:
+    if: |
+      contains(github.event.issue.labels.*.name, 'module-request')
+      && contains(github.event.issue.labels.*.name, 'approved')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Parse issue body
+        id: parse
+        run: |
+          BODY="${{ github.event.issue.body }}"
+
+          MODULE_NAME=$(echo "$BODY" | sed -n 's/^Module name: *//p' | head -n1)
+          echo "module_name=$MODULE_NAME" >> $GITHUB_OUTPUT
+
+          REQUESTER="${{ github.event.issue.user.login }}"
+          echo "requester=$REQUESTER" >> $GITHUB_OUTPUT
+
+      - name: Validate module name
+        run: |
+          if [[ ! "${{ steps.parse.outputs.module_name }}" =~ ^mod-[a-z0-9-]+$ ]]; then
+            echo "Invalid module name"
+            exit 1
+          fi
+
+      - name: Create repository from template
+        env:
+          GH_TOKEN: ${{ secrets.ORG_BOT_TOKEN }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository_owner }}/module-template/generate \
+            -d @- <<EOF
+          {
+            "owner": "${{ github.repository_owner }}",
+            "name": "${{ steps.parse.outputs.module_name }}",
+            "private": false,
+            "description": "Module requested by @${{ steps.parse.outputs.requester }}"
+          }
+          EOF
+
+      - name: Add requester as maintainer
+        env:
+          GH_TOKEN: ${{ secrets.ORG_BOT_TOKEN }}
+        run: |
+          curl -X PUT \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository_owner }}/${{ steps.parse.outputs.module_name }}/collaborators/${{ steps.parse.outputs.requester }} \
+            -d '{"permission":"maintain"}'
+
+      - name: Comment success
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ 模块仓库已创建： https://github.com/${context.repo.owner}/${{ steps.parse.outputs.module_name }}\n\n你已被设置为 Maintainer`
+            })

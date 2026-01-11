@@ -1,0 +1,20 @@
+name: Request New Module
+description: Request to create a new module repository
+title: "module-request: "
+labels: ["module-request"]
+body:
+  - type: input
+    id: module_name
+    attributes:
+      label: Module name
+      description: Repository name (must start with mod-)
+      placeholder: mod-example
+    validations:
+      required: true
+
+  - type: input
+    id: description
+    attributes:
+      label: Description
+    validations:
+      required: true

@@ -1,0 +1,17 @@
+{
+    "metamodule": true,
+    "summary": {
+        "en": "Meta module for OverlayFS support",
+        "ru": "Мета-модуль для поддержки OverlayFS"
+    },
+    "description": {
+        "en": "This meta module ensures that OverlayFS support is included in your kernel. OverlayFS allows you to create a unified filesystem by overlaying one filesystem on top of another, which is particularly useful for containerization and live systems.",
+        "ru": "Этот мета-модуль гарантирует, что поддержка OverlayFS включена в ваше ядро. OverlayFS позволяет создавать единый файловый система, накладывая одну файловую систему поверх другой, что особенно полезно для контейнеризации и живых систем."
+    },
+    "sourceUrl": "https://github.com/APatch-Modules/OverlayFS-Meta-Module",
+    "authors": ["APatch Modules Team"],
+    "license": "GPL-2.0-only",
+    "moduleid": "overlayfs-meta-module",
+    "version": "1.0.0",
+    "VersionCode": 10000
+}
