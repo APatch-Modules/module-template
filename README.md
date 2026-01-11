@@ -136,7 +136,13 @@ The repository homepage or support page
 - Required
 - Must be a valid **SPDX license identifier**
 
+## Module Name
 
+"modulename": "OverlayFS Meta Module"
+
+- set module name
+
+---
 
 ## Versions
 
