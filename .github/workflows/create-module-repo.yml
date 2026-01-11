@@ -2,13 +2,12 @@ name: Create Module Repository
 
 on:
   issues:
-    types: [labeled]
+    types: [created]
 
 jobs:
   create-repo:
     if: |
       github.event.label.name == 'approved'
-      && contains(github.event.issue.labels.*.name, 'module-request')
     runs-on: ubuntu-latest
 
     steps:
