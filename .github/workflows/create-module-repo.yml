@@ -2,7 +2,7 @@ name: Create Module Repository
 
 on:
   issues:
-    types: [created]
+    types: [labeled]
 
 jobs:
   create-repo:
