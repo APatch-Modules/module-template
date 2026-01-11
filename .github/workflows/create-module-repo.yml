@@ -22,12 +22,7 @@ jobs:
           REQUESTER="${{ github.event.issue.user.login }}"
           echo "requester=$REQUESTER" >> $GITHUB_OUTPUT
 
-      - name: Validate module name
-        run: |
-          if [[ ! "${{ steps.parse.outputs.module_name }}" =~ ^mod-[a-z0-9-]+$ ]]; then
-            echo "Invalid module name"
-            exit 1
-          fi
+    
 
       - name: Create repository from template
         env:
