@@ -50,8 +50,9 @@ jobs:
       - name: Comment success
         uses: actions/github-script@v7
         with:
+          github-token: ${{ secrets.ORG_BOT_TOKEN }}
           script: |
-            github.rest.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
